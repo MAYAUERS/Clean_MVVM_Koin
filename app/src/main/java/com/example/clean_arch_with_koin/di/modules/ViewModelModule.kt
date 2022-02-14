@@ -9,9 +9,14 @@ import org.koin.dsl.module
 
 val presentationModule= module {
 
-    single<CoctailRepository> { CoctailDataSource(get()) }
-    factory { CoctailsUseCase(get()) }
     viewModel {
-        CoctailViewModel(get())
+        CoctailViewModel(getCoctailsUseCase=get())
     }
+}
+val dataModule= module {
+    single<CoctailRepository> { CoctailDataSource(coctailApi=get()) }
+
+}
+val domainModule= module {
+    factory { CoctailsUseCase(coctailRepository=get()) }
 }

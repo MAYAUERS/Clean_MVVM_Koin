@@ -15,7 +15,8 @@ class BaseApplication :Application() {
         startKoin {
             androidLogger(Level.DEBUG)
             androidContext(this@BaseApplication)
-            modules(listOf(retrofitModule, presentationModule, picassoModule))
+            modules(listOf(retrofitModule, presentationModule, picassoModule, dataModule,
+                domainModule))
         }
     }
 }

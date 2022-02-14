@@ -6,7 +6,6 @@ import com.example.clean_arch_with_koin.data.CoctailApi
 import okhttp3.Cache
 import okhttp3.Call
 import okhttp3.Interceptor
-import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.android.ext.koin.androidContext
@@ -15,10 +14,10 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.File
 
-private const val CACHE_FILE_SIZE: Long = 30 * 1000 * 1000 // 30 Mib
+/*private const val CACHE_FILE_SIZE: Long = 30 * 1000 * 1000 // 30 Mib
 val retrofitModule = module {
 
-  single<Call.Factory> {
+    single<Call.Factory> {
         val cacheFile = cacheFile(androidContext())
         val cache = cache(cacheFile)
         okhttp(cache)
@@ -57,4 +56,29 @@ private fun retrofit(callFactory: Call.Factory, baseUrl: String) = Retrofit.Buil
 private fun okhttp(cache: Cache) = OkHttpClient.Builder()
     .addInterceptor(interceptor)
     .cache(cache)
-    .build()
+    .build()*/
+
+
+fun provideRetrofit(client: OkHttpClient) : Retrofit{
+    return Retrofit.Builder().baseUrl("https://www.thecocktaildb.com/")
+        .client(client)
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
+}
+fun provideOkhttpClient(httpLoggingInterceptor: HttpLoggingInterceptor):OkHttpClient{
+
+    return OkHttpClient().newBuilder().addInterceptor(httpLoggingInterceptor).build()
+}
+
+fun provideApi(retrofit: Retrofit):CoctailApi{
+    return retrofit.create(CoctailApi::class.java)
+}
+
+val retrofitModule = module {
+
+    factory { provideOkhttpClient(get()) }
+    factory { HttpLoggingInterceptor() }
+    single { provideRetrofit(get()) }
+    factory { provideApi(get()) }
+
+}

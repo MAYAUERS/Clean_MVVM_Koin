@@ -8,12 +8,6 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 
 
-/**
- * Ahsen Saeed}
- * ahsansaeed067@gmail.com}
- * 10/24/19}
- */
-
 val picassoModule = module {
 
     single {
